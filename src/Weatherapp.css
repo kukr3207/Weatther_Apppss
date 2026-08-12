@@ -1,0 +1,164 @@
+.weather-card {
+  width: min(92vw, 640px);
+  padding: clamp(1.5rem, 5vw, 3rem);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 28px;
+  color: #fff;
+  background: linear-gradient(145deg, #15245f 0%, #513f9e 58%, #1a7ea8 100%);
+  box-shadow: 0 28px 70px rgba(12, 18, 55, 0.35);
+}
+
+.weather-card h1 {
+  margin: 0 0 1.5rem;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  letter-spacing: 0.01em;
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: 1fr 3.5rem;
+  gap: 0.75rem;
+}
+
+.search-form input,
+.search-form button {
+  min-height: 3.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: #f5fffd;
+}
+
+.search-form input {
+  min-width: 0;
+  padding: 0 1.35rem;
+  color: #20243d;
+  font: inherit;
+}
+
+.search-form input::placeholder {
+  color: #6a6f82;
+}
+
+.search-form input:focus-visible,
+.search-form button:focus-visible {
+  outline: 3px solid #ffdb70;
+  outline-offset: 3px;
+}
+
+.search-form button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+.search-form button:disabled,
+.search-form input:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.search-form button img {
+  width: 1.35rem;
+  height: 1.35rem;
+}
+
+.status-message {
+  min-height: 1.5rem;
+  margin: 0.75rem 0 0;
+  color: #e8f9ff;
+  font-size: 0.95rem;
+}
+
+.status-error {
+  color: #ffdfdf;
+}
+
+.current-weather {
+  text-align: center;
+}
+
+.weather-icon {
+  width: clamp(9rem, 38vw, 13rem);
+  height: clamp(9rem, 38vw, 13rem);
+  margin: 0.5rem auto 0;
+  object-fit: contain;
+}
+
+.weather-temp,
+.weather-location,
+.detail-value,
+.detail-label {
+  margin: 0;
+}
+
+.weather-temp {
+  font-size: clamp(4rem, 16vw, 7rem);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.weather-location {
+  margin-top: 0.5rem;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.weather-details {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.weather-detail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: rgba(10, 21, 68, 0.28);
+  text-align: left;
+}
+
+.weather-detail img {
+  width: 2.2rem;
+  height: 2.2rem;
+  object-fit: contain;
+}
+
+.detail-value {
+  font-size: clamp(1.15rem, 4vw, 1.6rem);
+  font-weight: 700;
+}
+
+.detail-label {
+  margin-top: 0.2rem;
+  color: #dce8ff;
+  font-size: 0.9rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 480px) {
+  .weather-details {
+    grid-template-columns: 1fr;
+    margin-top: 2rem;
+  }
+
+  .weather-detail {
+    justify-content: flex-start;
+  }
+}
