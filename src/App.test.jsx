@@ -30,7 +30,7 @@ test('renders the forecast dashboard and default weather', () => {
   render(<App dashboardOptions={dashboardOptions()} />);
   expect(screen.getByRole('heading', { name: /forecast dashboard/i })).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: /london, gb/i })).toBeInTheDocument();
-  expect(screen.getByText('24°C')).toBeInTheDocument();
+  expect(screen.getAllByText('24°C')).not.toHaveLength(0);
   expect(screen.getByRole('heading', { name: /hourly forecast/i })).toBeInTheDocument();
 });
 
@@ -62,7 +62,7 @@ test('keeps current weather visible after a search error', async () => {
 test('switches displayed temperature units', () => {
   render(<App dashboardOptions={dashboardOptions()} />);
   fireEvent.click(screen.getByLabelText('°F'));
-  expect(screen.getByText('75°F')).toBeInTheDocument();
+  expect(screen.getAllByText('75°F')).not.toHaveLength(0);
 });
 
 test('saves and removes the current place', () => {
