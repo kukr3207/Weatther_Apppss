@@ -1,0 +1,72 @@
+.location-list {
+  padding: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 1rem;
+  background: var(--surface-color);
+}
+
+.location-list__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.location-list h2,
+.location-list p {
+  margin: 0;
+}
+
+.location-list h2 {
+  font-size: 1rem;
+}
+
+.location-list__heading span,
+.location-list__empty,
+.location-list__select span {
+  color: var(--muted-color);
+  font-size: 0.78rem;
+}
+
+.location-list ul {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.location-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.3rem;
+}
+
+.location-list button {
+  border: 0;
+  border-radius: 0.65rem;
+  color: var(--text-color);
+  background: transparent;
+  cursor: pointer;
+}
+
+.location-list__select {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.55rem;
+  text-align: left;
+}
+
+.location-list__select:hover,
+.location-list__select[aria-current] {
+  background: var(--surface-raised);
+}
+
+.location-list__remove {
+  width: 2rem;
+  font-size: 1.2rem;
+}
+
+.location-list__empty {
+  margin-top: 0.75rem !important;
+}
