@@ -63,3 +63,34 @@ input:focus-visible {
       #f4f6fc;
   }
 }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --text-color: #f7f8ff;
+  --muted-color: #aeb8d4;
+  --surface-color: rgba(18, 28, 65, 0.95);
+  --surface-raised: rgba(42, 55, 98, 0.78);
+  --border-color: rgba(190, 204, 255, 0.2);
+  --accent-color: #7774ed;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --text-color: #17213b;
+  --muted-color: #5d6985;
+  --surface-color: rgba(255, 255, 255, 0.96);
+  --surface-raised: #edf1fb;
+  --border-color: rgba(44, 58, 99, 0.16);
+  --accent-color: #514fd3;
+  --danger-text: #8f2030;
+  --danger-surface: #ffe8eb;
+  --success-text: #17643e;
+  --success-surface: #ddf8e9;
+  --panel-shadow: 0 24px 55px rgba(36, 50, 88, 0.12);
+}
+
+:root[data-theme="light"] body {
+  background:
+    radial-gradient(circle at 20% 10%, rgba(138, 155, 235, 0.3), transparent 36rem),
+    #f4f6fc;
+}
