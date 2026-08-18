@@ -1,0 +1,50 @@
+.location-search {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.location-search label {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.location-search__controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+}
+
+.location-search input,
+.location-search button {
+  min-height: 3rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.85rem;
+  font: inherit;
+}
+
+.location-search input {
+  min-width: 0;
+  padding: 0 1rem;
+  color: var(--text-color);
+  background: var(--surface-raised);
+}
+
+.location-search button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 1rem;
+  color: white;
+  background: var(--accent-color);
+  cursor: pointer;
+}
+
+.location-search button img {
+  width: 1rem;
+  filter: brightness(0) invert(1);
+}
+
+.location-search :disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
