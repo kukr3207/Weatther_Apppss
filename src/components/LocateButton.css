@@ -1,0 +1,14 @@
+.locate-button {
+  width: 100%;
+  min-height: 2.7rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.8rem;
+  color: var(--text-color);
+  background: var(--surface-color);
+  cursor: pointer;
+}
+
+.locate-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}

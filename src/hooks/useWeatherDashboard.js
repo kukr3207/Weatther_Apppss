@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_CURRENT_WEATHER, DEFAULT_FORECAST } from '../data/defaultWeather';
 import { WEATHER_ERROR_CODES, WeatherServiceError } from '../services/errors';
 import { createOpenWeatherClient } from '../services/openWeatherClient';
+import { locateDevice } from '../services/geolocation';
 import { createFavoritesRepository } from '../storage/favoritesRepository';
 import { createJsonStore } from '../storage/jsonStore';
 import { createRecentSearchesRepository } from '../storage/recentSearchesRepository';
@@ -25,8 +26,9 @@ export function useWeatherDashboard(options = {}) {
       favorites: options.favorites ?? createFavoritesRepository(store),
       recent: options.recent ?? createRecentSearchesRepository(store),
       settings: options.settings ?? createSettingsRepository(store),
+      locate: options.locate ?? locateDevice,
     };
-  }, [options.client, options.favorites, options.recent, options.settings, options.store]);
+  }, [options.client, options.favorites, options.locate, options.recent, options.settings, options.store]);
 
   const [current, setCurrent] = useState(options.initialCurrent ?? DEFAULT_CURRENT_WEATHER);
   const [forecast, setForecast] = useState(options.initialForecast ?? DEFAULT_FORECAST);
@@ -92,6 +94,16 @@ export function useWeatherDashboard(options = {}) {
     isFavorite,
     isLoading: status.type === 'loading',
     search,
+    async locate() {
+      setStatus({ type: 'loading', message: 'Finding your location…' });
+      try {
+        const location = await services.locate();
+        return loadLocation(location);
+      } catch (error) {
+        setStatus({ type: 'error', message: error instanceof Error ? error.message : 'Unable to find your location.' });
+        return null;
+      }
+    },
     selectLocation: loadLocation,
     refresh: () => activeLocation && loadLocation(activeLocation, { record: false }),
     toggleFavorite() {

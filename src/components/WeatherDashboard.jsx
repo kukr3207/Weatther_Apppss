@@ -1,6 +1,7 @@
 import CurrentWeatherCard from './CurrentWeatherCard';
 import FavoriteLocations from './FavoriteLocations';
 import ForecastStrip from './ForecastStrip';
+import LocateButton from './LocateButton';
 import RecentSearches from './RecentSearches';
 import SearchForm from './SearchForm';
 import StatusBanner from './StatusBanner';
@@ -28,6 +29,7 @@ function WeatherDashboard({ dashboardOptions }) {
       <div className="dashboard-layout">
         <aside className="dashboard-sidebar" aria-label="Location controls">
           <SearchForm onSearch={dashboard.search} disabled={dashboard.isLoading} />
+          <LocateButton onLocate={dashboard.locate} disabled={dashboard.isLoading} />
           <StatusBanner status={dashboard.status} />
           <FavoriteLocations
             favorites={dashboard.favorites}

@@ -23,7 +23,8 @@ function dashboardOptions(overrides = {}) {
     getCurrent: vi.fn().mockResolvedValue(DEFAULT_CURRENT_WEATHER),
     getForecast: vi.fn().mockResolvedValue(DEFAULT_FORECAST),
   };
-  return { favorites, recent, settings, client, ...overrides };
+  const locate = vi.fn().mockResolvedValue(DEFAULT_CURRENT_WEATHER.location);
+  return { favorites, recent, settings, client, locate, ...overrides };
 }
 
 test('renders the forecast dashboard and default weather', () => {
@@ -72,4 +73,12 @@ test('saves and removes the current place', () => {
   expect(screen.getByText('1/8')).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: /remove london/i }));
   expect(screen.getByText('0/8')).toBeInTheDocument();
+});
+
+test('loads weather for the device location', async () => {
+  const options = dashboardOptions();
+  render(<App dashboardOptions={options} />);
+  fireEvent.click(screen.getByRole('button', { name: /use my location/i }));
+  await waitFor(() => expect(options.locate).toHaveBeenCalled());
+  expect(options.client.getCurrent).toHaveBeenCalled();
 });
