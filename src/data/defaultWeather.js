@@ -46,3 +46,18 @@ export const DEFAULT_FORECAST = Object.freeze({
     }),
   }))),
 });
+
+export const DEFAULT_AIR_QUALITY = Object.freeze({
+  index: 2,
+  observedAt: '2024-03-15T09:00:00.000Z',
+  components: Object.freeze({
+    co: 216.96,
+    no: 0.12,
+    no2: 19.88,
+    o3: 64.37,
+    so2: 4.11,
+    pm2_5: 8.42,
+    pm10: 12.06,
+    nh3: 1.22,
+  }),
+});
