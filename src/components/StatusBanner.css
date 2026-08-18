@@ -1,0 +1,41 @@
+.status-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 2.5rem;
+  padding: 0.55rem 0.8rem;
+  border-radius: 0.7rem;
+  color: var(--muted-color);
+  font-size: 0.92rem;
+}
+
+.status-banner--empty {
+  padding: 0;
+}
+
+.status-banner--error {
+  color: var(--danger-text);
+  background: var(--danger-surface);
+}
+
+.status-banner--success {
+  color: var(--success-text);
+  background: var(--success-surface);
+}
+
+.status-banner__spinner {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: status-spin 0.7s linear infinite;
+}
+
+@keyframes status-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .status-banner__spinner { animation: none; }
+}
