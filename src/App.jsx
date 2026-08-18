@@ -1,11 +1,11 @@
 
 import './App.css';
-import Weatherapp from './Weatherapp';
+import WeatherDashboard from './components/WeatherDashboard';
 
-function App() {
+function App({ dashboardOptions }) {
   return (
     <div className="App">
-      <Weatherapp />
+      <WeatherDashboard dashboardOptions={dashboardOptions} />
     </div>
   );
 }
