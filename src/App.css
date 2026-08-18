@@ -1,6 +1,4 @@
 .App {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 2rem 1rem;
+  padding: clamp(1rem, 4vw, 3rem) 1rem;
 }
