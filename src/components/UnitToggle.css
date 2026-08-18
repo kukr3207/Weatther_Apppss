@@ -1,0 +1,46 @@
+.unit-toggle {
+  display: inline-flex;
+  gap: 0.2rem;
+  margin: 0;
+  padding: 0.2rem;
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  background: var(--surface-color);
+}
+
+.unit-toggle legend {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
+
+.unit-toggle label {
+  cursor: pointer;
+}
+
+.unit-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.unit-toggle span {
+  display: block;
+  min-width: 2.6rem;
+  padding: 0.45rem 0.65rem;
+  border-radius: 999px;
+  color: var(--muted-color);
+  text-align: center;
+}
+
+.unit-toggle input:checked + span {
+  color: white;
+  background: var(--accent-color);
+}
+
+.unit-toggle input:focus-visible + span {
+  outline: 3px solid var(--focus-color);
+  outline-offset: 2px;
+}
