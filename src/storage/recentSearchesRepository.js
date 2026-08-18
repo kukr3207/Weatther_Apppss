@@ -47,5 +47,14 @@ export function createRecentSearchesRepository(store, options = {}) {
       store.remove(RECENT_SEARCHES_KEY);
       return [];
     },
+
+    replace(entries) {
+      const next = (Array.isArray(entries) ? entries : [])
+        .filter(validEntry)
+        .filter((entry, index, all) => all.findIndex((item) => item.id === entry.id) === index)
+        .slice(0, limit);
+      store.set(RECENT_SEARCHES_KEY, next);
+      return next;
+    },
   };
 }

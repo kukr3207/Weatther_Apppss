@@ -52,5 +52,17 @@ export function createFavoritesRepository(store, options = {}) {
       store.set(FAVORITES_KEY, next);
       return next;
     },
+
+    replace(locations) {
+      const next = (Array.isArray(locations) ? locations : [])
+        .map((location) => {
+          try { return normalizedLocation(location); } catch { return null; }
+        })
+        .filter(Boolean)
+        .filter((location, index, all) => all.findIndex((item) => item.id === location.id) === index)
+        .slice(0, limit);
+      store.set(FAVORITES_KEY, next);
+      return next;
+    },
   };
 }
