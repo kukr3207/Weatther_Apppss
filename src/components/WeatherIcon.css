@@ -1,0 +1,19 @@
+.condition-icon {
+  display: block;
+  object-fit: contain;
+}
+
+.condition-icon--small {
+  width: 3rem;
+  height: 3rem;
+}
+
+.condition-icon--medium {
+  width: 5rem;
+  height: 5rem;
+}
+
+.condition-icon--large {
+  width: clamp(7rem, 20vw, 11rem);
+  height: clamp(7rem, 20vw, 11rem);
+}
