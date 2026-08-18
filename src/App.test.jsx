@@ -1,85 +1,75 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, expect, test, vi } from 'vitest';
+import { expect, test, vi } from 'vitest';
 import App from './App';
+import { DEFAULT_CURRENT_WEATHER, DEFAULT_FORECAST } from './data/defaultWeather';
+import { WeatherServiceError, WEATHER_ERROR_CODES } from './services/errors';
 
-afterEach(() => {
-  vi.unstubAllGlobals();
-  vi.unstubAllEnvs();
-});
+function dashboardOptions(overrides = {}) {
+  let favoriteItems = [];
+  let settingsValue = { unitSystem: 'metric', theme: 'system', refreshMinutes: 10 };
+  const favorites = {
+    list: vi.fn(() => favoriteItems),
+    has: vi.fn((location) => favoriteItems.some((item) => item.id === location.id)),
+    add: vi.fn((location) => { favoriteItems = [{ ...location }]; return favoriteItems; }),
+    remove: vi.fn(() => { favoriteItems = []; return favoriteItems; }),
+  };
+  const recent = { list: vi.fn(() => []), record: vi.fn(() => []), clear: vi.fn(() => []) };
+  const settings = {
+    read: vi.fn(() => settingsValue),
+    update: vi.fn((changes) => { settingsValue = { ...settingsValue, ...changes }; return settingsValue; }),
+  };
+  const client = {
+    searchLocations: vi.fn().mockResolvedValue([DEFAULT_CURRENT_WEATHER.location]),
+    getCurrent: vi.fn().mockResolvedValue(DEFAULT_CURRENT_WEATHER),
+    getForecast: vi.fn().mockResolvedValue(DEFAULT_FORECAST),
+  };
+  return { favorites, recent, settings, client, ...overrides };
+}
 
-test('renders the default forecast with accessible search controls', () => {
-  render(<App />);
-
-  expect(screen.getByRole('heading', { name: /weather forecast/i })).toBeInTheDocument();
-  expect(screen.getByRole('heading', { name: 'London' })).toBeInTheDocument();
+test('renders the forecast dashboard and default weather', () => {
+  render(<App dashboardOptions={dashboardOptions()} />);
+  expect(screen.getByRole('heading', { name: /forecast dashboard/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /london, gb/i })).toBeInTheDocument();
   expect(screen.getByText('24°C')).toBeInTheDocument();
-  expect(screen.getByLabelText(/city name/i)).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: /search weather/i })).toBeEnabled();
+  expect(screen.getByRole('heading', { name: /hourly forecast/i })).toBeInTheDocument();
 });
 
-test('validates an empty city without calling the weather service', () => {
-  const fetchMock = vi.fn();
-  vi.stubGlobal('fetch', fetchMock);
-  vi.stubEnv('VITE_OPENWEATHER_API_KEY', 'test-key');
-  render(<App />);
-
-  fireEvent.click(screen.getByRole('button', { name: /search weather/i }));
-
-  expect(screen.getByRole('status')).toHaveTextContent('Enter a city to search.');
-  expect(fetchMock).not.toHaveBeenCalled();
+test('loads a searched location through the dashboard client', async () => {
+  const options = dashboardOptions();
+  render(<App dashboardOptions={options} />);
+  fireEvent.change(screen.getByLabelText(/search for a location/i), { target: { value: ' Paris ' } });
+  fireEvent.click(screen.getByRole('button', { name: /search/i }));
+  await waitFor(() => expect(options.client.searchLocations).toHaveBeenCalledWith('Paris'));
+  expect(options.client.getCurrent).toHaveBeenCalled();
+  expect(screen.getByRole('status')).toHaveTextContent('Weather updated for London.');
 });
 
-test('loads and displays weather for a searched city', async () => {
-  vi.stubEnv('VITE_OPENWEATHER_API_KEY', 'test-key');
-  const fetchMock = vi.fn().mockResolvedValue({
-    ok: true,
-    json: async () => ({
-      name: 'Paris',
-      main: { temp: 17.4, humidity: 71 },
-      wind: { speed: 3.26 },
-      weather: [{ icon: '10d' }],
-    }),
+test('keeps current weather visible after a search error', async () => {
+  const options = dashboardOptions({
+    client: {
+      searchLocations: vi.fn().mockRejectedValue(
+        new WeatherServiceError(WEATHER_ERROR_CODES.network, 'No network connection.'),
+      ),
+    },
   });
-  vi.stubGlobal('fetch', fetchMock);
-  render(<App />);
-
-  fireEvent.change(screen.getByLabelText(/city name/i), { target: { value: '  Paris  ' } });
-  fireEvent.click(screen.getByRole('button', { name: /search weather/i }));
-
-  expect(await screen.findByRole('heading', { name: 'Paris' })).toBeInTheDocument();
-  expect(screen.getByText('17°C')).toBeInTheDocument();
-  expect(screen.getByText('71%')).toBeInTheDocument();
-  expect(screen.getByText('3.3 m/s')).toBeInTheDocument();
-  expect(screen.getByRole('status')).toHaveTextContent('Weather updated for Paris.');
-
-  const requestedUrl = new URL(fetchMock.mock.calls[0][0]);
-  expect(requestedUrl.searchParams.get('q')).toBe('Paris');
-  expect(requestedUrl.searchParams.get('units')).toBe('metric');
-  expect(requestedUrl.searchParams.get('appid')).toBe('test-key');
+  render(<App dashboardOptions={options} />);
+  fireEvent.change(screen.getByLabelText(/search for a location/i), { target: { value: 'Paris' } });
+  fireEvent.click(screen.getByRole('button', { name: /search/i }));
+  expect(await screen.findByRole('alert')).toHaveTextContent('No network connection.');
+  expect(screen.getByRole('heading', { name: /london, gb/i })).toBeInTheDocument();
 });
 
-test('shows a useful API error and preserves the current forecast', async () => {
-  vi.stubEnv('VITE_OPENWEATHER_API_KEY', 'test-key');
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false, status: 404 }));
-  render(<App />);
-
-  fireEvent.change(screen.getByLabelText(/city name/i), { target: { value: 'Unknown place' } });
-  fireEvent.submit(screen.getByRole('search'));
-
-  await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('City not found.'));
-  expect(screen.getByRole('heading', { name: 'London' })).toBeInTheDocument();
-  expect(screen.getByText('24°C')).toBeInTheDocument();
+test('switches displayed temperature units', () => {
+  render(<App dashboardOptions={dashboardOptions()} />);
+  fireEvent.click(screen.getByLabelText('°F'));
+  expect(screen.getByText('75°F')).toBeInTheDocument();
 });
 
-test('explains when the API key is missing', () => {
-  vi.stubEnv('VITE_OPENWEATHER_API_KEY', '');
-  const fetchMock = vi.fn();
-  vi.stubGlobal('fetch', fetchMock);
-  render(<App />);
-
-  fireEvent.change(screen.getByLabelText(/city name/i), { target: { value: 'Delhi' } });
-  fireEvent.click(screen.getByRole('button', { name: /search weather/i }));
-
-  expect(screen.getByRole('status')).toHaveTextContent('Weather service is not configured.');
-  expect(fetchMock).not.toHaveBeenCalled();
+test('saves and removes the current place', () => {
+  render(<App dashboardOptions={dashboardOptions()} />);
+  fireEvent.click(screen.getByRole('button', { name: /^save$/i }));
+  expect(screen.getByRole('button', { name: /^saved$/i })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByText('1/8')).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /remove london/i }));
+  expect(screen.getByText('0/8')).toBeInTheDocument();
 });
