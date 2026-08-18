@@ -2,6 +2,7 @@ import { readWeatherConfig } from '../config/weather';
 import { mapCurrentWeather } from './mappers/currentWeather';
 import { mapForecast } from './mappers/forecast';
 import { mapLocations } from './mappers/locations';
+import { mapAirQuality, mapAirQualityForecast } from './mappers/airQuality';
 import { WeatherServiceError, WEATHER_ERROR_CODES, weatherErrorFromStatus } from './errors';
 
 function coordinates(location) {
@@ -70,6 +71,24 @@ export function createOpenWeatherClient(options = {}) {
         signal,
       );
       return mapForecast(payload);
+    },
+
+    async getAirQuality(location, { signal } = {}) {
+      const payload = await request(
+        '/data/2.5/air_pollution',
+        coordinates(location),
+        signal,
+      );
+      return mapAirQuality(payload);
+    },
+
+    async getAirQualityForecast(location, { signal } = {}) {
+      const payload = await request(
+        '/data/2.5/air_pollution/forecast',
+        coordinates(location),
+        signal,
+      );
+      return mapAirQualityForecast(payload);
     },
   };
 }
