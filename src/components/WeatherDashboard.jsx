@@ -2,15 +2,18 @@ import CurrentWeatherCard from './CurrentWeatherCard';
 import FavoriteLocations from './FavoriteLocations';
 import ForecastStrip from './ForecastStrip';
 import LocateButton from './LocateButton';
+import NetworkBanner from './NetworkBanner';
 import RecentSearches from './RecentSearches';
 import SearchForm from './SearchForm';
 import StatusBanner from './StatusBanner';
 import UnitToggle from './UnitToggle';
 import { useWeatherDashboard } from '../hooks/useWeatherDashboard';
+import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import './WeatherDashboard.css';
 
 function WeatherDashboard({ dashboardOptions }) {
   const dashboard = useWeatherDashboard(dashboardOptions);
+  const online = useOnlineStatus();
 
   return (
     <main className="dashboard-shell">
@@ -25,11 +28,12 @@ function WeatherDashboard({ dashboardOptions }) {
           disabled={dashboard.isLoading}
         />
       </header>
+      <NetworkBanner online={online} />
 
       <div className="dashboard-layout">
         <aside className="dashboard-sidebar" aria-label="Location controls">
-          <SearchForm onSearch={dashboard.search} disabled={dashboard.isLoading} />
-          <LocateButton onLocate={dashboard.locate} disabled={dashboard.isLoading} />
+          <SearchForm onSearch={dashboard.search} disabled={dashboard.isLoading || !online} />
+          <LocateButton onLocate={dashboard.locate} disabled={dashboard.isLoading || !online} />
           <StatusBanner status={dashboard.status} />
           <FavoriteLocations
             favorites={dashboard.favorites}
