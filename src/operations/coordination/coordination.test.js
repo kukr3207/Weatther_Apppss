@@ -147,8 +147,9 @@ describe('forecast handoffs', () => {
 
   it('builds recipient inboxes', () => {
     const ready = publishForecastHandoff(draft());
-    expect(handoffInbox([ready], 'night')).toHaveLength(1);
-    expect(handoffInbox([ready], 'day')).toEqual([]);
+    const options = { now: '2026-10-11T12:30:00Z' };
+    expect(handoffInbox([ready], 'night', options)).toHaveLength(1);
+    expect(handoffInbox([ready], 'day', options)).toEqual([]);
   });
 });
 
