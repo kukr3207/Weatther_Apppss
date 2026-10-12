@@ -4,6 +4,7 @@ const TABS = Object.freeze([
   { id: 'health', label: 'Health', description: 'Air quality and weather alerts' },
   { id: 'planner', label: 'Planner', description: 'Outdoor timing and daylight' },
   { id: 'places', label: 'Places', description: 'Notes, dashboards, and comparisons' },
+  { id: 'operations', label: 'Operations', description: 'Consensus, risks, and decision support' },
   { id: 'settings', label: 'Settings', description: 'Display and workspace data' },
 ]);
 

@@ -28,6 +28,7 @@ import WeatherAlertsPanel from './WeatherAlertsPanel';
 import WeatherHistoryPanel from './WeatherHistoryPanel';
 import WeatherInsights from './WeatherInsights';
 import RefreshControls from './RefreshControls';
+import OperationsCenter from './OperationsCenter';
 import { useWeatherDashboard } from '../hooks/useWeatherDashboard';
 import { useOnlineStatus } from '../hooks/useOnlineStatus';
 import { useWeatherIntelligence } from '../hooks/useWeatherIntelligence';
@@ -199,6 +200,14 @@ function WeatherDashboard({ dashboardOptions }) {
             onClear={dashboard.clearSnapshots}
           />
         </>) : null}
+
+        {activeTab === 'operations' ? panel(
+          <OperationsCenter
+            dashboard={dashboard}
+            activeTab={activeTab}
+            onOpenTab={setActiveTab}
+          />,
+        ) : null}
 
         {activeTab === 'settings' ? panel(
           <>
